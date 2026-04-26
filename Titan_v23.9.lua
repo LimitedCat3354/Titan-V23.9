@@ -1,40 +1,105 @@
---[[ 
-    TITAN V24.6 - XENO EDITION
-    - Catégories : Mouvement, Apparence, Visuels, Jeux
-    - Sliders : Vitesse (0-300), Saut (0-500), Taille (0.1-3)
-    - Interface : Style Windows (Réduire / Fermer)
-    - Support : Steal A BRAINROT (Placeholder)
+--[[
+    TITAN V25 - ULTRA HUB EDITION
+    - Système d'onglets verticaux
+    - Design Moderne (Sombre & Néon)
+    - Animations de transition
 --]]
-print("TITAN EST EN TRAIN DE SE LANCER...")
 
 local Player = game.Players.LocalPlayer
-local UIS = game:GetService("UserInputService")
-local RS = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 local TS = game:GetService("TweenService")
-local Camera = workspace.CurrentCamera
-local Lighting = game:GetService("Lighting")
-local TeleportService = game:GetService("TeleportService")
-local HttpService = game:GetService("HttpService")
+local UIS = game:GetService("UserInputService")
 
--- Nettoyage des anciennes versions
-if CoreGui:FindFirstChild("TitanV24") then CoreGui.TitanV24:Destroy() end
+-- Nettoyage
+if CoreGui:FindFirstChild("TitanV25") then CoreGui.TitanV25:Destroy() end
 
-local settings = {
-    ghost = false, esp = false, noclip = false, 
-    fly = false, speed = 16, jump = 50, invisible = false,
-    theme = Color3.fromRGB(0, 255, 150),
-    version = "V24.6", minimized = false
-}
+local Titan = Instance.new("ScreenGui", CoreGui); Titan.Name = "TitanV25"
+local Main = Instance.new("Frame", Titan)
+Main.Size = UDim2.new(0, 600, 0, 400); Main.Position = UDim2.new(0.5, -300, 0.5, -200)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15); Main.BorderSizePixel = 0
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(0, 255, 150)
 
-local sg = Instance.new("ScreenGui", CoreGui); sg.Name = "TitanV24"
+-- --- BARRE LATERALE (NAVIGATION) ---
+local SideBar = Instance.new("Frame", Main)
+SideBar.Size = UDim2.new(0, 150, 1, 0); SideBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20); SideBar.BorderSizePixel = 0
+local SideCorner = Instance.new("UICorner", SideBar).CornerRadius = UDim.new(0, 8)
 
--- --- CADRE PRINCIPAL ---
-local Main = Instance.new("Frame", sg)
-Main.Size = UDim2.new(0, 550, 0, 600); Main.Position = UDim2.new(0.5, -275, 0.4, 0)
-Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12); Main.BorderSizePixel = 0; Main.Active = true; Main.ClipsDescendants = true
-Instance.new("UICorner", Main)
-local MainStroke = Instance.new("UIStroke", Main); MainStroke.Color = settings.theme; MainStroke.Thickness = 2
+local TabContainer = Instance.new("Frame", SideBar)
+TabContainer.Size = UDim2.new(1, 0, 1, -50); TabContainer.Position = UDim2.new(0, 0, 0, 50); TabContainer.BackgroundTransparency = 1
+local TabList = Instance.new("UIListLayout", TabContainer); TabList.Padding = UDim.new(0, 5); TabList.HorizontalAlignment = "Center"
+
+local Title = Instance.new("TextLabel", SideBar)
+Title.Size = UDim2.new(1, 0, 0, 50); Title.Text = "TITAN V25"; Title.TextColor3 = Color3.fromRGB(0, 255, 150)
+Title.Font = "GothamBold"; Title.TextSize = 18; Title.BackgroundTransparency = 1
+
+-- --- ZONE DE CONTENU ---
+local Pages = Instance.new("Frame", Main)
+Pages.Size = UDim2.new(1, -160, 1, -10); Pages.Position = UDim2.new(0, 155, 0, 5); Pages.BackgroundTransparency = 1
+
+local function createPage(name)
+    local p = Instance.new("ScrollingFrame", Pages)
+    p.Name = name; p.Size = UDim2.new(1, 0, 1, 0); p.BackgroundTransparency = 1; p.Visible = false
+    p.ScrollBarThickness = 2; p.CanvasSize = UDim2.new(0, 0, 2, 0)
+    Instance.new("UIListLayout", p).Padding = UDim.new(0, 8)
+    return p
+end
+
+-- --- FONCTION POUR CRÉER UN ONGLET ---
+local function addTab(name, pageTarget)
+    local btn = Instance.new("TextButton", TabContainer)
+    btn.Size = UDim2.new(0, 130, 0, 35); btn.Text = name; btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    btn.TextColor3 = Color3.new(0.7, 0.7, 0.7); btn.Font = "GothamSemibold"; btn.TextSize = 14
+    Instance.new("UICorner", btn)
+
+    btn.MouseButton1Click:Connect(function()
+        for _, p in pairs(Pages:GetChildren()) do p.Visible = false end
+        for _, b in pairs(TabContainer:GetChildren()) do 
+            if b:IsA("TextButton") then TS:Create(b, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(30, 30, 30), TextColor3 = Color3.new(0.7, 0.7, 0.7)}):Play() end
+        end
+        pageTarget.Visible = true
+        TS:Create(btn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(0, 255, 150), TextColor3 = Color3.new(0, 0, 0)}):Play()
+    end)
+end
+
+-- --- CRÉATION DES PAGES ---
+local pMovement = createPage("Mouvement")
+local pVisuals = createPage("Visuels")
+local pGames = createPage("Jeux")
+local pConfig = createPage("Paramètres")
+
+addTab("Mouvement", pMovement)
+addTab("Visuels", pVisuals)
+addTab("Jeux (Brainrot)", pGames)
+addTab("Paramètres", pConfig)
+
+-- --- AJOUT DE BOUTONS (EXEMPLE) ---
+local function addButton(parent, text, callback)
+    local b = Instance.new("TextButton", parent)
+    b.Size = UDim2.new(1, -10, 0, 40); b.Text = text; b.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    b.TextColor3 = Color3.new(1,1,1); b.Font = "Gotham"; b.TextSize = 14
+    Instance.new("UICorner", b)
+    b.MouseButton1Click:Connect(callback)
+end
+
+-- Page Mouvement
+addButton(pMovement, "Vitesse x2", function() Player.Character.Humanoid.WalkSpeed = 32 end)
+addButton(pMovement, "Saut x2", function() Player.Character.Humanoid.JumpPower = 100 end)
+
+-- Page Jeux (Placeholder pour ton script Brainrot)
+addButton(pGames, "Attente du script Brainrot...", function() print("Envoie-moi le script !") end)
+
+-- Page Paramètres
+addButton(pConfig, "Détruire Titan", function() Titan:Destroy() end)
+
+-- Drag System
+local dragging, dragStart, startPos
+Main.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; dragStart = i.Position; startPos = Main.Position end end)
+UIS.InputChanged:Connect(function(i) if dragging and i.UserInputType == Enum.UserInputType.MouseMovement then local d = i.Position - dragStart; Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y) end end)
+UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
+
+-- Ouvrir la première page par défaut
+pMovement.Visible = truelocal MainStroke = Instance.new("UIStroke", Main); MainStroke.Color = settings.theme; MainStroke.Thickness = 2
 
 -- --- BARRE DE TITRE ---
 local TitleBar = Instance.new("Frame", Main)
