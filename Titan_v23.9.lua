@@ -1,40 +1,55 @@
 --[[
-    TITAN V25 - ULTRA HUB EDITION
-    - Système d'onglets verticaux
-    - Design Moderne (Sombre & Néon)
-    - Animations de transition
+    TITAN V24.8 - RECOVERY VERSION
+    Cette version est simplifiée au maximum pour FORCER l'affichage.
 --]]
 
-local Player = game.Players.LocalPlayer
-local CoreGui = game:GetService("CoreGui")
-local TS = game:GetService("TweenService")
-local UIS = game:GetService("UserInputService")
+print("--- TITAN STARTING ---")
 
--- Nettoyage
-if CoreGui:FindFirstChild("TitanV25") then CoreGui.TitanV25:Destroy() end
+local Player = game:GetService("Players").LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
 
-local Titan = Instance.new("ScreenGui", CoreGui); Titan.Name = "TitanV25"
-local Main = Instance.new("Frame", Titan)
-Main.Size = UDim2.new(0, 600, 0, 400); Main.Position = UDim2.new(0.5, -300, 0.5, -200)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15); Main.BorderSizePixel = 0
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", Main).Color = Color3.fromRGB(0, 255, 150)
+-- Nettoyage des anciens restes (très important)
+for _, v in pairs(PlayerGui:GetChildren()) do
+    if v.Name == "TitanV25" or v.Name == "TitanV24" then v:Destroy() end
+end
 
--- --- BARRE LATERALE (NAVIGATION) ---
-local SideBar = Instance.new("Frame", Main)
-SideBar.Size = UDim2.new(0, 150, 1, 0); SideBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20); SideBar.BorderSizePixel = 0
-local SideCorner = Instance.new("UICorner", SideBar).CornerRadius = UDim.new(0, 8)
+-- CRÉATION DU MENU (On utilise PlayerGui pour être sûr que ça s'affiche)
+local Screen = Instance.new("ScreenGui")
+Screen.Name = "TitanV24"
+Screen.Parent = PlayerGui -- CHANGEMENT ICI : On évite CoreGui
+Screen.ResetOnSpawn = false
 
-local TabContainer = Instance.new("Frame", SideBar)
-TabContainer.Size = UDim2.new(1, 0, 1, -50); TabContainer.Position = UDim2.new(0, 0, 0, 50); TabContainer.BackgroundTransparency = 1
-local TabList = Instance.new("UIListLayout", TabContainer); TabList.Padding = UDim.new(0, 5); TabList.HorizontalAlignment = "Center"
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 400, 0, 300)
+Main.Position = UDim2.new(0.5, -200, 0.5, -150)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true -- Pour pouvoir le bouger
+Main.Parent = Screen
 
-local Title = Instance.new("TextLabel", SideBar)
-Title.Size = UDim2.new(1, 0, 0, 50); Title.Text = "TITAN V25"; Title.TextColor3 = Color3.fromRGB(0, 255, 150)
-Title.Font = "GothamBold"; Title.TextSize = 18; Title.BackgroundTransparency = 1
+local Corner = Instance.new("UICorner", Main)
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(0, 255, 150)
+Stroke.Thickness = 2
 
--- --- ZONE DE CONTENU ---
-local Pages = Instance.new("Frame", Main)
+local Title = Instance.new("TextLabel", Main)
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.Text = "TITAN RECOVERY"
+Title.TextColor3 = Color3.fromRGB(0, 255, 150)
+Title.Font = "GothamBold"
+Title.TextSize = 20
+Title.BackgroundTransparency = 1
+
+local Status = Instance.new("TextLabel", Main)
+Status.Size = UDim2.new(1, 0, 0, 100)
+Status.Position = UDim2.new(0, 0, 0.4, 0)
+Status.Text = "SI TU VOIS CA, LE GITHUB MARCHE !\n\nOuvre la console (F9) et dis moi\ns'il y a du texte BLANC ou ROUGE."
+Status.TextColor3 = Color3.new(1, 1, 1)
+Status.BackgroundTransparency = 1
+
+print("--- TITAN DISPLAYED SUCCESSFULLY ---")local Pages = Instance.new("Frame", Main)
 Pages.Size = UDim2.new(1, -160, 1, -10); Pages.Position = UDim2.new(0, 155, 0, 5); Pages.BackgroundTransparency = 1
 
 local function createPage(name)
