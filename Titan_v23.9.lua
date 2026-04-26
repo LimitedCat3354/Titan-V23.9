@@ -1,40 +1,81 @@
 --[[
-    TITAN V24.8 - RECOVERY VERSION
-    Cette version est simplifiée au maximum pour FORCER l'affichage.
+    TITAN V24.9 - VERSION STABLE
+    Toutes les fonctions sont de retour !
 --]]
 
-print("--- TITAN STARTING ---")
-
-local Player = game:GetService("Players").LocalPlayer
+local Player = game.Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
+local UIS = game:GetService("UserInputService")
 
--- Nettoyage des anciens restes (très important)
+-- 1. Nettoyage
 for _, v in pairs(PlayerGui:GetChildren()) do
-    if v.Name == "TitanV25" or v.Name == "TitanV24" then v:Destroy() end
+    if v.Name == "TitanV24" then v:Destroy() end
 end
 
--- CRÉATION DU MENU (On utilise PlayerGui pour être sûr que ça s'affiche)
-local Screen = Instance.new("ScreenGui")
+-- 2. Interface (Le design qui fonctionne chez toi)
+local Screen = Instance.new("ScreenGui", PlayerGui)
 Screen.Name = "TitanV24"
-Screen.Parent = PlayerGui -- CHANGEMENT ICI : On évite CoreGui
 Screen.ResetOnSpawn = false
 
-local Main = Instance.new("Frame")
-Main.Name = "Main"
-Main.Size = UDim2.new(0, 400, 0, 300)
-Main.Position = UDim2.new(0.5, -200, 0.5, -150)
+local Main = Instance.new("Frame", Screen)
+Main.Size = UDim2.new(0, 450, 0, 350)
+Main.Position = UDim2.new(0.5, -225, 0.5, -175)
 Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Main.BorderSizePixel = 0
 Main.Active = true
-Main.Draggable = true -- Pour pouvoir le bouger
-Main.Parent = Screen
-
-local Corner = Instance.new("UICorner", Main)
+Main.Draggable = true -- Pour que tu puisses le placer où tu veux
+Instance.new("UICorner", Main)
 local Stroke = Instance.new("UIStroke", Main)
 Stroke.Color = Color3.fromRGB(0, 255, 150)
 Stroke.Thickness = 2
 
+-- Titre
 local Title = Instance.new("TextLabel", Main)
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.Text = "TITAN V24.9 (STABLE)"
+Title.TextColor3 = Color3.fromRGB(0, 255, 150)
+Title.Font = "GothamBold"; Title.TextSize = 18; Title.BackgroundTransparency = 1
+
+-- Conteneur de boutons (Scrolling)
+local Scroll = Instance.new("ScrollingFrame", Main)
+Scroll.Size = UDim2.new(1, -20, 1, -70)
+Scroll.Position = UDim2.new(0, 10, 0, 60)
+Scroll.BackgroundTransparency = 1; Scroll.BorderSizePixel = 0
+Scroll.ScrollBarThickness = 3; Scroll.CanvasSize = UDim2.new(0,0,2,0)
+local List = Instance.new("UIListLayout", Scroll)
+List.Padding = UDim.new(0, 10); List.HorizontalAlignment = "Center"
+
+-- Fonction pour ajouter un bouton facilement
+local function addBtn(txt, callback)
+    local b = Instance.new("TextButton", Scroll)
+    b.Size = UDim2.new(0, 400, 0, 40)
+    b.Text = txt; b.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    b.TextColor3 = Color3.new(1,1,1); b.Font = "GothamSemibold"; b.TextSize = 14
+    Instance.new("UICorner", b)
+    b.MouseButton1Click:Connect(callback)
+end
+
+-- --- FONCTIONS DE TRICHE ---
+
+addBtn("⚡ VITESSE BOOST (x2)", function()
+    Player.Character.Humanoid.WalkSpeed = 32
+end)
+
+addBtn("🚀 SAUT BOOST (x2)", function()
+    Player.Character.Humanoid.JumpPower = 100
+end)
+
+addBtn("👻 GHOST MODE (Toggle)", function()
+    local root = Player.Character.HumanoidRootPart
+    root.CanCollide = not root.CanCollide
+    print("Ghost Mode : " .. tostring(not root.CanCollide))
+end)
+
+addBtn("❌ FERMER TITAN", function()
+    Screen:Destroy()
+end)
+
+print("--- TITAN V24.9 CHARGÉ ---")local Title = Instance.new("TextLabel", Main)
 Title.Size = UDim2.new(1, 0, 0, 50)
 Title.Text = "TITAN RECOVERY"
 Title.TextColor3 = Color3.fromRGB(0, 255, 150)
