@@ -5,6 +5,7 @@
     - Interface : Style Windows (Réduire / Fermer)
     - Support : Steal A BRAINROT (Placeholder)
 --]]
+print("TITAN EST EN TRAIN DE SE LANCER...")
 
 local Player = game.Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
